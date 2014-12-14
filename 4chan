@@ -1,0 +1,31 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
+import os
+import sys
+from subprocess import call
+
+if len(sys.argv) != 2:
+    print("ERROR: required exactly 1 argument")
+    exit(1)
+
+# Example of thread "v/thread/123456789"
+thread = sys.argv[1]
+
+curl = "curl -s http://boards.4chan.org/%s/" % thread
+grep = "grep -o -i \'File: <a href=\"//i.4cdn.org\\/[a-z]*\\/[0-9]*\\.[a-z]\\{3\\}\'"
+sed = "sed -r 's/File: <a href=\\\"\\/\\///'"
+xargs = "xargs wget"
+
+c = "{} | {} | {} | {}".format(curl, grep, sed, xargs)
+
+print("INFO: cmd: ", c)
+
+subfolder = os.path.join(os.getcwd(), "%s" % thread)
+if not os.path.exists(subfolder):
+    os.makedirs(subfolder)
+
+# Go into subfolder so images will be downloaded there
+os.chdir(subfolder)
+
+call(c, shell=True)
