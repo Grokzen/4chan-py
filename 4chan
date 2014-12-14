@@ -21,7 +21,9 @@ c = "{} | {} | {} | {}".format(curl, grep, sed, xargs)
 
 print("INFO: cmd: ", c)
 
-subfolder = os.path.join(os.getcwd(), "%s" % thread)
+thread_id = thread.split("/")[2]
+
+subfolder = os.path.join(os.getcwd(), "%s" % thread_id)
 if not os.path.exists(subfolder):
     os.makedirs(subfolder)
 
